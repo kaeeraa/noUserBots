@@ -1,6 +1,6 @@
 # The brand new Discord as-telegram bots messages blocker
 
-[![GitHub stars](https://img.shields.io/github/stars/kaeeraa/noUserBots.svg?style=social&label=Stars)](https://github.com/kaeeraa/noUserBots)
+
 [![GitHub license](https://img.shields.io/github/license/kaeeraa/noUserBots.svg?style=for-the-badge)](https://github.com/kaeeraa/noUserBots/blob/main/LICENSE)
 
 ## Made especially for [BitrixNodes](https://dsc.gg/bitrixnodes) and [HelmetNodes](https://discord.gg/FNgsbKEw66)
@@ -42,4 +42,4 @@ python main.py -O
 nohup python main.py -O
 ```
 
-## Made with ❤️ by kaeeraa
+## Made with ❤️ by kaeeraa  [![GitHub stars](https://img.shields.io/github/stars/kaeeraa/noUserBots.svg?style=social&label=Stars)](https://github.com/kaeeraa/noUserBots)
