@@ -33,13 +33,13 @@ poetry install
 ### Finally, run script
 
 ```shell
-python main.py -O
+python main.py -OO
 ```
 
 ### If you want to run it in background, use `nohup`
 
 ```shell
-nohup python main.py -O
+nohup python main.py -OO
 ```
 
 ## Made with ❤️ by kaeeraa  [![GitHub stars](https://img.shields.io/github/stars/kaeeraa/noUserBots.svg?style=social&label=Stars)](https://github.com/kaeeraa/noUserBots)
