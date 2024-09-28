@@ -16,6 +16,8 @@ hikari = "^2.1.0"
 python-dotenv = "^1.0.1"
 loguru = "^0.7.2"
 uvloop = "^0.20.0"
+mypy = "^1.11.2"
+isort = "^5.13.2"
 
 
 [build-system]
