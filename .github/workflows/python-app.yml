@@ -30,8 +30,8 @@ jobs:
         poetry install --no-root
     - name: Lint with mypy
       run: |
-        poetry run "mypy ."
+        mypy .
     - name: Sort imports
       run: |
-        poetry run "isort ."
+        isort .
     
