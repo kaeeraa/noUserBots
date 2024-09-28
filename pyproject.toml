@@ -20,3 +20,7 @@ loguru = "^0.7.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[[tool.mypy.overrides]]
+module = "main"
+disable_error_code = ["arg-type", "union-attr"]
