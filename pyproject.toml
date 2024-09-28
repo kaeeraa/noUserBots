@@ -3,7 +3,7 @@ name = "nouserbots"
 version = "0.1.0"
 description = "Block as-telegram bots"
 authors = ["kaeeraa <kaeeraa@nebula-nook.ru>"]
-license = "GPL-3"
+license = "GPL-3.0"
 readme = "README.md"
 
 [tool.poetry.scripts]
