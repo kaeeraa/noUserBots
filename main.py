@@ -47,7 +47,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
         # type: ignore
         if guild.get_role(int(env["BOTS_ROLE_ID"])) in event.message.member.get_roles():
             return
-    except:
+    except AttributeError:
         pass
 
     # TODO make it optional
