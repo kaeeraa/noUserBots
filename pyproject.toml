@@ -23,5 +23,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [[tool.mypy.overrides]]
-module = "main"
+module = "bot"
 disable_error_code = ["arg-type", "union-attr"]
