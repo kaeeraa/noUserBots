@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "nouserbots"
+version = "0.1.0"
+description = "Block as-telegram bots"
+authors = ["kaeeraa <kaeeraa@nebula-nook.ru>"]
+license = "GPL-3"
+readme = "README.md"
+
+[tool.poetry.scripts]
+noUserBots = 'noUserBots.main:run'
+
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.14"
+hikari = "^2.1.0"
+python-dotenv = "^1.0.1"
+loguru = "^0.7.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
