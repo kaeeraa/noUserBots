@@ -1,13 +1,21 @@
 import hikari
 from dotenv import dotenv_values
-from time import perf_counter
+from time import monotonic
 import hikari.errors
 from loguru import logger
 from sys import stdout
+from os import name
+from asyncio import set_event_loop_policy
+from uvloop import EventLoopPolicy
+
+# https://docs.hikari-py.dev/en/stable/#uvloop
+if name != "nt":
+    set_event_loop_policy(policy=EventLoopPolicy())
+
 
 logger.remove()
 logger.add(sink=stdout,
-           format="<level>{time:DD HH:mm:ss.SSS}</level> | <level>{level}</level> | <level>{message}</level>")
+           format="<level>{time:HH:mm:ss.SSS}</level> | <level>{level.icon}</level> | <level>{message}</level>")
 
 logger.level(name="INFO", color="<green>")
 logger.level(name="ERROR", color="<red>")
@@ -15,7 +23,7 @@ logger.level(name="ERROR", color="<red>")
 env = dotenv_values(dotenv_path=".env", verbose=True)
 
 bot = hikari.GatewayBot(
-    token=env["BOT_TOKEN"],  # type: ignore
+    token=env["BOT_TOKEN"],
     intents=hikari.Intents.ALL
 )
 
@@ -30,11 +38,11 @@ async def on_ready(event: hikari.StartingEvent) -> None:
 @bot.listen(hikari.GuildMessageCreateEvent)
 async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
     if event.message.content == "!?ping":
-        before: float = perf_counter()
+        before: float = monotonic()
         msg: hikari.Message = await event.message.respond(content="Pong!")
-        ping: float = (perf_counter() - before) * 1000
+        ping: float = (monotonic() - before) * 1000
         await msg.edit(content=f"Pong! 🏓 Time taken: `{int(ping)}ms`")
-        logger.info(f"{event.message.author} : ping | Pong! 🏓 Time taken: {
+        logger.info(f"{event.message.author}:ping | Pong! 🏓 Time taken: {
                     int(ping)}ms")
         return
 
@@ -63,7 +71,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
                 event.message_id} from {event.message.channel_id}",
             color=0xFF0000
         )
-        logger.error(f"{event.message.author} : auto | Failed to delete message {
+        logger.error(f"{event.message.author}:auto | Failed to delete message {
                      event.message_id} from \x23{event.message.channel_id}")
         await bot.rest.create_message(channel=channel, embed=embed)
         return
@@ -74,7 +82,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
             event.message_id} from {event.message.channel_id}",
         color=0x00FF00
     )
-    logger.info(f"{event.message.author} : auto | Deleted message {
+    logger.info(f"{event.message.author}:auto | Deleted message {
                 event.message_id} from \x23{event.message.channel_id}")
     await bot.rest.create_message(channel=channel, embed=embed)
 
