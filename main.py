@@ -22,7 +22,7 @@ bot = hikari.GatewayBot(
 
 @bot.listen(hikari.StartingEvent)
 async def on_ready(event: hikari.StartingEvent) -> None:
-    logger.info(f"Logged in as {bot.get_me()}")
+    logger.info(f"Am I alive? {bot.is_alive}")
     await bot.update_presence(activity=hikari.Activity(
         name="What's up, uB?", type=hikari.ActivityType.WATCHING))
 
@@ -34,8 +34,8 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
         msg: hikari.Message = await event.message.respond(content="Pong!")
         ping: float = (perf_counter() - before) * 1000
         await msg.edit(content=f"Pong! 🏓 Time taken: `{int(ping)}ms`")
-        logger.info(f"{event.message.author} : ping | Pong! 🏓 Time taken: `{
-                    int(ping)}ms`")
+        logger.info(f"{event.message.author} : ping | Pong! 🏓 Time taken: {
+                    int(ping)}ms")
         return
 
     if not event.message.author.is_bot:
@@ -43,11 +43,16 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
 
     guild = event.get_guild()
 
-    if guild.get_role(1114497843101708371) in event.message.member.get_roles():  # type: ignore
-        return
+    try:
+        # type: ignore
+        if guild.get_role(int(env["BOTS_ROLE_ID"])) in event.message.member.get_roles():
+            return
+    except:
+        pass
 
+    # TODO make it optional
     channel = guild.get_channel(  # type: ignore
-        channel=1185230213584539710
+        channel=int(env["LOGS_CHANNEL_ID"])  # type: ignore
     )
 
     try:
@@ -60,7 +65,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
             color=0xFF0000
         )
         logger.error(f"{event.message.author} : auto | Failed to delete message {
-                     event.message_id} from {event.message.channel_id}")
+                     event.message_id} from \x23{event.message.channel_id}")
         await bot.rest.create_message(channel=channel, embed=embed)
         return
 
@@ -71,7 +76,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
         color=0x00FF00
     )
     logger.info(f"{event.message.author} : auto | Deleted message {
-                event.message_id} from {event.message.channel_id}")
+                event.message_id} from \x23{event.message.channel_id}")
     await bot.rest.create_message(channel=channel, embed=embed)
 
 
