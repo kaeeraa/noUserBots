@@ -44,15 +44,14 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
     guild = event.get_guild()
 
     try:
-        # type: ignore
         if guild.get_role(int(env["BOTS_ROLE_ID"])) in event.message.member.get_roles():
             return
     except AttributeError:
         pass
 
     # TODO make it optional
-    channel = guild.get_channel(  # type: ignore
-        channel=int(env["LOGS_CHANNEL_ID"])  # type: ignore
+    channel = guild.get_channel(
+        channel=int(env["LOGS_CHANNEL_ID"])
     )
 
     try:
