@@ -1,53 +1,30 @@
 import hikari
-from dotenv import dotenv_values
 from time import monotonic
 import hikari.errors
-from loguru import logger
-from sys import stdout
 from os import name
 from asyncio import set_event_loop_policy
 from uvloop import EventLoopPolicy
+from vars import bot, env, logger
+
+# flake8: noqa | something as cogs
+from start_event import on_ready
+from commands.ping import ping
+
 
 # https://docs.hikari-py.dev/en/stable/#uvloop
 if name != "nt":
     set_event_loop_policy(policy=EventLoopPolicy())
 
 
-logger.remove()
-logger.add(sink=stdout,
-           format="<level>{time:HH:mm:ss.SSS}</level> | <level>{level.icon}</level> | <level>{message}</level>")
-
-logger.level(name="INFO", color="<green>")
-logger.level(name="ERROR", color="<red>")
-
-env = dotenv_values(dotenv_path=".env", verbose=True)
-
-bot = hikari.GatewayBot(
-    token=env["BOT_TOKEN"],
-    intents=hikari.Intents.ALL
-)
-
-
-@bot.listen(hikari.StartingEvent)
-async def on_ready(event: hikari.StartingEvent) -> None:
-    logger.info(f"Am I alive? {bot.is_alive}")
-    await bot.update_presence(activity=hikari.Activity(
-        name="What's up, uB?", type=hikari.ActivityType.WATCHING))
-
-
 @bot.listen(hikari.GuildMessageCreateEvent)
 async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
-    if event.message.content == "!?ping":
-        before: float = monotonic()
-        msg: hikari.Message = await event.message.respond(content="Pong!")
-        ping: float = (monotonic() - before) * 1000
-        await msg.edit(content=f"Pong! 🏓 Time taken: `{int(ping)}ms`")
-        logger.info(f"{event.message.author}:ping | Pong! 🏓 Time taken: {
-                    int(ping)}ms")
-        return
-
     if not event.message.author.is_bot:
         return
+
+    if event.message.webhook_id is not None:
+        return
+
+    guild = None
 
     guild = event.get_guild()
 
@@ -55,12 +32,15 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
         if guild.get_role(int(env["BOTS_ROLE_ID"])) in event.message.member.get_roles():
             return
     except AttributeError:
+        # no? that's ok
         pass
 
-    # TODO make it optional
-    channel = guild.get_channel(
-        channel=int(env["LOGS_CHANNEL_ID"])
-    )
+    channel: hikari.PermissibleGuildChannel | None = None
+
+    if env["LOGS_CHANNEL_ID"] is not None:
+        channel = guild.get_channel(
+            channel=int(env["LOGS_CHANNEL_ID"])
+        )
 
     try:
         await event.message.delete()
@@ -83,7 +63,7 @@ async def on_message(event: hikari.GuildMessageCreateEvent) -> None:
         color=0x00FF00
     )
     logger.info(f"{event.message.author}:auto | Deleted message {
-                event.message_id} from \x23{event.message.channel_id}")
+                event.message_id} from channel {event.message.channel_id} \n ")
     await bot.rest.create_message(channel=channel, embed=embed)
 
 
