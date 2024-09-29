@@ -19,8 +19,7 @@ jobs:
 
       - name: Install dependencies [stage 1]
         run: |
-          apt-get update
-          apt-get install pipx
+          sudo apt-get install pipx
           pipx install poetry
 
       - name: Update poetry.lock
