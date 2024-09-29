@@ -1,6 +1,5 @@
 # The brand new Discord as-telegram bots messages blocker
 
-
 [![GitHub license](https://img.shields.io/github/license/kaeeraa/noUserBots.svg?style=for-the-badge)](https://github.com/kaeeraa/noUserBots/blob/main/LICENSE)
 
 ## Made especially for [BitrixNodes](https://dsc.gg/bitrixnodes) and [HelmetNodes](https://discord.gg/FNgsbKEw66)
