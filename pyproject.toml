@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "noUserBots"
+name = "nouserbots"
 version = "0.1.0"
 description = "Block as-telegram bots"
 authors = ["kaeeraa <kaeeraa@nebula-nook.ru>"]
