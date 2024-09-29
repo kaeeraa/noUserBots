@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies [stage 2]
         run : |
           poetry install --no-root
-          poetry update --no-root
+          poetry update
 
       - name: Lint with mypy
         run: |
