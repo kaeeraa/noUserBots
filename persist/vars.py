@@ -7,7 +7,7 @@ from arc import GatewayClient
 
 logger.remove()
 logger.add(sink=stdout,
-           format="<level>{time:HH:mm:ss.SSS}</level> | <level>{level.icon}</level> | <level>{message}</level>")
+           format="<level>{level.icon}</level> | <level>{time:HH:mm:ss.SSS}</level> | <level>{message}</level>")
 
 logger.level(name="INFO", color="<green>", icon="I")
 logger.level(name="ERROR", color="<red>", icon="E")
