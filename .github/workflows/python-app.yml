@@ -33,8 +33,10 @@ jobs:
 
       - name: Lint with mypy
         run: |
+          poetry add mypy
           poetry run "mypy ."
 
       - name: Sort imports
         run: |
+          poetry add isort
           poetry run "isort ."
