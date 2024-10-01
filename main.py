@@ -26,6 +26,8 @@ if name != "nt":
         logger.info("Using uvloop")
         set_event_loop_policy(policy=EventLoopPolicy())
 
+# TODO make as public bot
+
 
 def run() -> None:
     """
