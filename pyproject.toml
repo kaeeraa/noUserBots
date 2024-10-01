@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nouserbots"
-version = "0.1.0"
+version = "0.1.1"
 description = "Block as-telegram bots"
 authors = ["kaeeraa <kaeeraa@nebula-nook.ru>"]
 maintainers = ["kaeeraa <kaeeraa@nebula-nook.ru>"]
@@ -11,7 +11,7 @@ repository = "https://github.com/kaeeraa/noUserBots"
 documentation = "https://github.com/kaeeraa/noUserBots"
 keywords = ["discord", "bot", "protection", "user", "moderation", "server", "automod"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -48,11 +48,3 @@ hikari-arc = "^1.3.4"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[[tool.mypy.overrides]]
-module = "msg_watcher"
-disable_error_code = ["arg-type", "union-attr"]
-
-[[tool.mypy.overrides]]
-module = "vars"
-disable_error_code = ["arg-type"]

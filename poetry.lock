@@ -719,7 +719,10 @@ files = [
 idna = ">=2.0"
 multidict = ">=4.0"
 
+[extras]
+uvloop = ["uvloop"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12,<3.13"
-content-hash = "d6e69532f8accea45ea86a1650107895917cb470295c81fa93030cdeb479460f"
+content-hash = "c741a26d07472b891c31d4fa4a7d06e4ac60ace2c7288994bf124519b4a1d6a8"
