@@ -9,19 +9,19 @@ logger.remove()
 logger.add(sink=stdout,
            format="<level>{time:HH:mm:ss.SSS}</level> | <level>{level.icon}</level> | <level>{message}</level>")
 
-logger.level(name="INFO", color="<green>")
-logger.level(name="ERROR", color="<red>")
+logger.level(name="INFO", color="<green>", icon="I")
+logger.level(name="ERROR", color="<red>", icon="E")
 
 
 env: Dict[str, str | None] = dotenv_values(dotenv_path=".env", verbose=True)
 
 if not env["BOT_TOKEN"]:
     logger.error("BOT_TOKEN not set")
-    exit(1)
+    exit(code=1)
 
 bot = GatewayBot(
     token=env["BOT_TOKEN"],
     intents=Intents.ALL
 )
 
-client = GatewayClient(bot)
+client = GatewayClient(app=bot)
