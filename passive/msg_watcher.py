@@ -1,61 +1,86 @@
-from vars import bot, env, logger
-from hikari import GuildMessageCreateEvent, PermissibleGuildChannel, errors, Embed
+from persist.vars import bot, env, logger
+from hikari import (
+    GatewayGuild, GuildMessageCreateEvent, Message,
+    OwnUser, Snowflake, User, errors, Embed
+)
+from typing import Optional
 
 
 async def on_message(event: GuildMessageCreateEvent) -> None:
-    if not event.message.author.is_bot:
-        logger.info(f"{event.message.author}:auto | {
-                    event.message.content} \n Allowed")
+    """
+    Triggered when a message is created in a guild.
+
+    Deletes message from not whitelisted bots.
+    Also sends a message to the logs channel if the bot fails to delete the
+    message.
+
+    :param event: The event that triggered this function.
+    :type event: GuildMessageCreateEvent
+    """
+    target: User = event.message.author
+    targetMessage: Message = event.message
+    botSelf: Optional[OwnUser] = bot.get_me()
+    guild: Optional[GatewayGuild] = event.get_guild()
+    botsRoleId: Optional[str] = env.get("BOTS_ROLE_ID")
+    logsChannelId: Optional[str] = env.get("LOGS_CHANNEL_ID")
+
+    if not botsRoleId:
+        logger.error("Failed to get bots role id")
+        return
+    if not logsChannelId:
+        logger.info("No logs channel set")
+    if botSelf is None:
+        logger.error("Failed to get bot instance")
+        return
+    if guild is None:
+        logger.error("Failed to get guild instance")
         return
 
-    if event.message.author.id == bot.get_me().id:
+    botId: Snowflake = botSelf.id
+
+    if not target.is_bot or targetMessage.webhook_id is not None:
+        logger.info(f"{target}:auto | {targetMessage.content} \n Allowed")
         return
 
-    if event.message.webhook_id is not None:
-        logger.info(f"{event.message.author}:auto | {
-                    event.message.content} \n Allowed")
+    if target.id == botId:
         return
-
-    guild = None
-
-    guild = event.get_guild()
 
     try:
-        if guild.get_role(int(env["BOTS_ROLE_ID"])) in event.message.member.get_roles():
-            logger.info(f"{event.message.author}:auto | {
-                        event.message.content} \n Allowed")
+        if guild.get_role(Snowflake(botsRoleId)):
+            logger.info(f"{target}:auto | {targetMessage.content} \n Allowed")
             return
     except AttributeError:
-        # no? that's ok
         pass
 
-    channel: PermissibleGuildChannel | None = None
+    async def create_message(embed: Embed) -> None:
+        """
+        Creates a message in the given channel with the given embed.
 
-    if env["LOGS_CHANNEL_ID"] is not None:
-        channel = guild.get_channel(
-            channel=int(env["LOGS_CHANNEL_ID"])
-        )
+        :param embed: The embed to be sent.
+        """
+        if logsChannelId:
+            await bot.rest.create_message(channel=int(logsChannelId), embed=embed)
 
     try:
-        await event.message.delete()
+        await targetMessage.delete()
     except (errors.NotFoundError, errors.ForbiddenError):
         embed = Embed(
-            title="⚠️ Error",
+            title=" Error",
             description=f"Failed to delete message {
-                event.message_id} from {event.message.channel_id}",
+                targetMessage.id} from {targetMessage.channel_id}",
             color=0xFF0000
         )
-        logger.error(f"{event.message.author}:auto | Failed to delete message {
-                     event.message_id} from \x23{event.message.channel_id}")
-        await bot.rest.create_message(channel=channel, embed=embed)
+        logger.error(f"{target}:auto | Failed to delete message {
+                     targetMessage.id} from #{targetMessage.channel_id}")
+        await create_message(embed=embed)
         return
 
     embed = Embed(
-        title="🎉 Success",
+        title=" Success",
         description=f"Deleted message {
-            event.message_id} from {event.message.channel_id}",
+            targetMessage.id} from {targetMessage.channel_id}",
         color=0x00FF00
     )
-    logger.info(f"{event.message.author}:auto | Deleted message {
-                event.message_id} from channel {event.message.channel_id} \n ")
-    await bot.rest.create_message(channel=channel, embed=embed)
+    logger.info(f"{target}:auto | Deleted message {
+                targetMessage.id} from channel {targetMessage.channel_id} \n ")
+    await create_message(embed=embed)
