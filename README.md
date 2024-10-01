@@ -12,7 +12,7 @@
 ### First step, is clone this repo (if u installing it to desktop)
 
 ```shell
-git clone https://github.com/BitrixNodes/noUserBots
+git clone https://github.com/kaeeraa/noUserBots
 ```
 
 ### Next, install requirements
