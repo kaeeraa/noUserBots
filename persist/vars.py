@@ -15,6 +15,10 @@ logger.level(name="ERROR", color="<red>")
 
 env: Dict[str, str | None] = dotenv_values(dotenv_path=".env", verbose=True)
 
+if not env["BOT_TOKEN"]:
+    logger.error("BOT_TOKEN not set")
+    exit(1)
+
 bot = GatewayBot(
     token=env["BOT_TOKEN"],
     intents=Intents.ALL
