@@ -4,13 +4,14 @@ import hikari.errors
 from os import name
 from asyncio import set_event_loop_policy
 from uvloop import EventLoopPolicy
-from vars import bot, env, logger
+from persist.vars import bot, env, logger
 
 # flake8: noqa | something as cogs
 from passive.start_event import on_ready
 from passive.msg_watcher import on_message
 from commands.ping import ping
 
+# subscribe to imported event funcs
 bot.event_manager.subscribe(hikari.StartedEvent, on_ready)
 bot.event_manager.subscribe(hikari.GuildMessageCreateEvent, on_message)
 
@@ -27,6 +28,12 @@ if name != "nt":
 
 
 def run() -> None:
+    """
+    Runs the bot.
+
+    This function is only called when this script is run directly, rather than
+    being imported.
+    """
     if __name__ == "__main__":
         bot.run()
 
