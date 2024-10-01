@@ -19,9 +19,14 @@ jobs:
 
       - name: Install dependencies [stage 1]
         run: |
-          sudo apt-get install pipx
-          pipx install poetry
+          sudo apt-get update
+          sudo apt-get install -y pipx
 
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+          pipx install poetry
+          
       - name: Update poetry.lock
         run: |
           poetry lock
@@ -33,10 +38,7 @@ jobs:
 
       - name: Lint with mypy
         run: |
-          poetry add mypy
-          poetry run "mypy ."
-
+          mypy .
       - name: Sort imports
         run: |
-          poetry add isort
-          poetry run "isort ."
+          isort .
